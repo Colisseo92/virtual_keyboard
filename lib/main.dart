@@ -4,6 +4,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:virtual_keyboard/keyboard/KeyWidget.dart';
 import 'package:virtual_keyboard/keyboard/Keyboard.dart';
+import 'package:virtual_keyboard/keyboard/KeyboardWidget.dart';
 import 'package:virtual_keyboard/l10n/l10n.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localization.dart';
@@ -67,6 +68,8 @@ class _CameraScreenState extends State<CameraScreen> {
   bool _isStreaming = false;
   String serverMessage = "Waiting for server response...";
   bool state = true;
+  Keyboard keyboard_object = Keyboard(15, 5);
+  String current_message = "";
   late App app;
 
   @override
@@ -97,7 +100,7 @@ class _CameraScreenState extends State<CameraScreen> {
       print("WebSocket connection closed");
     });
 
-    app = App("");
+    app = App(current_message);
   }
 
   @override
@@ -151,13 +154,13 @@ class _CameraScreenState extends State<CameraScreen> {
              child: Container(
                color: Colors.red,
                child: Center(
-                 child: Text(AppLocalizations.of(context)!.title),
+                 child: Text(current_message),
                ),
              )
            ),
            Expanded(
              flex: 2,
-             child: KeyboardWidget(state: state),
+             child: KeyboardWidget(state: state, keyboard: keyboard_object),
            )
          ],
         ),
