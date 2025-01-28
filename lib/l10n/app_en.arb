@@ -1,0 +1,22 @@
+{
+  "language": "English",
+  "@language": {
+    "description": "The current language"
+  },
+  "helloWorld": "Hello World!",
+  "@helloWorld": {
+    "description": "A programmer greeting"
+  },
+  "multiLanguage": "Multi Language",
+  "@multiLanguage": {
+    "description": "App Title"
+  },
+  "title": "Virtual Keyboard",
+  "@title": {
+    "description": "title of the app"
+  },
+  "first_key_1": "1",
+  "@first_key_1": {
+    "description": "first key"
+  }
+}
