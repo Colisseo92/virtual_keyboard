@@ -15,8 +15,24 @@
   "@title": {
     "description": "title of the app"
   },
-  "first_key_1": "1",
-  "@first_key_1": {
-    "description": "first key"
+  "key_1_1_1": "²",
+  "@key_1_1": {
+    "description": "first key first line"
+  },
+  "key_1_2_1": "&",
+  "@key_1_2_1": {
+    "description": "second key first line normal"
+  },
+  "key_1_2_2": "1",
+  "@key_1_2_2": {
+    "description": "second key first line shift"
+  },
+  "key_2_2_1": "q",
+  "@key_2_2_1": {
+    "description": "second key second line shift"
+  },
+  "key_2_2_2": "Q",
+  "@key_2_2_2": {
+    "description": "second key second line shift"
   }
 }

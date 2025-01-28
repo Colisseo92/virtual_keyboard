@@ -4,5 +4,6 @@ class L10n{
   static final all = [
     Locale('en'), //English
     Locale('fr'), //French
+    Locale('kr'), //Korean
   ];
 }

@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:virtual_keyboard/keyboard/KeyObject.dart';
 import 'package:virtual_keyboard/keyboard/KeyboardState.dart';
+import 'package:flutter_gen/gen_l10n/app_localization.dart';
 
 class Keyboard{
 
@@ -7,18 +9,20 @@ class Keyboard{
 
   int keyboard_width_size;
   int keyboard_height_size;
+  BuildContext context;
 
   List<List<KeyObject>> keyboard_key_layout = [];
 
   Keyboard(
       this.keyboard_width_size,
-      this.keyboard_height_size,{
+      this.keyboard_height_size,
+      this.context,{
         this.state = KeyboardState.normal,
       }
       ){
     List<KeyObject> first_line = [
-      KeyObject("²","",1,this.state),
-      KeyObject("&","",1,this.state),
+      KeyObject(AppLocalizations.of(context)!.key_1_1_1,"",1,this.state),
+      KeyObject(AppLocalizations.of(context)!.key_1_2_1,AppLocalizations.of(context)!.key_1_2_2,1,this.state),
       KeyObject("é","",1,this.state),
       KeyObject("\"","",1,this.state),
       KeyObject("'","",1,this.state),
@@ -35,7 +39,7 @@ class Keyboard{
 
     List<KeyObject> second_line = [
       KeyObject("<tab>","",2,this.state),
-      KeyObject("a","",1,this.state),
+      KeyObject(AppLocalizations.of(context)!.key_2_2_1,AppLocalizations.of(context)!.key_2_2_2,1,this.state),
       KeyObject("z","",1,this.state),
       KeyObject("e","",1,this.state),
       KeyObject("r","",1,this.state),

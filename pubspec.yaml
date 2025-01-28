@@ -41,6 +41,8 @@ dependencies:
   camera_android: ^0.10.10
   web_socket_channel: ^3.0.1
   auto_size_text: ^3.0.0
+  flutter_riverpod: ^2.0.0
+  flutter_inset_box_shadow: ^1.0.8
 
 dev_dependencies:
   flutter_test:

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:virtual_keyboard/keyboard/KeyWidget.dart';
 import 'package:virtual_keyboard/keyboard/Keyboard.dart';
 import 'package:virtual_keyboard/keyboard/KeyboardWidget.dart';
@@ -11,6 +12,8 @@ import 'package:flutter_gen/gen_l10n/app_localization.dart';
 import 'package:camera_android/camera_android.dart' if (dart.library.html) 'package:camera_web/camera_web.dart' if (dart.library.io) 'package:camera/camera.dart';
 import 'package:virtual_keyboard/utils/appState.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
+
+import 'keyboard/KeyboardManager.dart';
 
 
 void main() async {
@@ -22,7 +25,7 @@ void main() async {
 
     if (cameras.isNotEmpty) {
       print("Using camera: ${cameras.first.name}");
-      runApp(MyApp(camera: cameras.first));
+      runApp(ProviderScope(child: MyApp(camera: cameras.first)));
     } else {
       print("No cameras available!");
       runApp(ErrorApp(message: "No cameras available!"));
@@ -47,7 +50,7 @@ class MyApp extends StatelessWidget {
       home: CameraScreen(camera: camera),
       supportedLocales: L10n.all,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
-      locale: const Locale('en'),
+      locale: const Locale('fr'),
     );
   }
 }
@@ -68,7 +71,6 @@ class _CameraScreenState extends State<CameraScreen> {
   bool _isStreaming = false;
   String serverMessage = "Waiting for server response...";
   bool state = true;
-  Keyboard keyboard_object = Keyboard(15, 5);
   String current_message = "";
   late App app;
 
@@ -146,24 +148,31 @@ class _CameraScreenState extends State<CameraScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Keyboard keyboard_object = Keyboard(15, 5, context);
     return Scaffold(
-        body: Column(
-         children: [
-           Expanded(
-             flex: 1,
-             child: Container(
-               color: Colors.red,
-               child: Center(
-                 child: Text(current_message),
-               ),
-             )
-           ),
-           Expanded(
-             flex: 2,
-             child: KeyboardWidget(state: state, keyboard: keyboard_object),
-           )
-         ],
-        ),
+        body: Consumer(
+          builder: (context,ref,child){
+            final text = ref.watch(keyboardTextProvider);
+
+            return Column(
+              children: [
+                Expanded(
+                    flex: 1,
+                    child: Container(
+                      color: Colors.white,
+                      child: Center(
+                        child: Text(text),
+                      ),
+                    )
+                ),
+                Expanded(
+                  flex: 2,
+                  child: KeyboardWidget(state: state, keyboard: keyboard_object),
+                )
+              ],
+            );
+          }
+        )
       );
   }
 }
