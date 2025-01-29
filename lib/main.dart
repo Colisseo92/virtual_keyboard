@@ -9,12 +9,13 @@ import 'package:virtual_keyboard/keyboard/KeyboardWidget.dart';
 import 'package:virtual_keyboard/l10n/l10n.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localization.dart';
-import 'package:camera_android/camera_android.dart' if (dart.library.html) 'package:camera_web/camera_web.dart' if (dart.library.io) 'package:camera/camera.dart';
+import 'package:camera_android/camera_android.dart'
+    if (dart.library.html) 'package:camera_web/camera_web.dart'
+    if (dart.library.io) 'package:camera/camera.dart';
 import 'package:virtual_keyboard/utils/appState.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 import 'keyboard/KeyboardManager.dart';
-
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -50,7 +51,7 @@ class MyApp extends StatelessWidget {
       home: CameraScreen(camera: camera),
       supportedLocales: L10n.all,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
-      locale: const Locale('fr'),
+      locale: const Locale('kr'),
     );
   }
 }
@@ -90,15 +91,13 @@ class _CameraScreenState extends State<CameraScreen> {
       Uri.parse('ws://127.0.0.1:8000/ws'),
     );
 
-    _channel.stream.listen((message){
-      setState((){
+    _channel.stream.listen((message) {
+      setState(() {
         serverMessage = message;
       });
-    },
-    onError: (error){
+    }, onError: (error) {
       print("WebSocket error: $error");
-    },
-    onDone: (){
+    }, onDone: () {
       print("WebSocket connection closed");
     });
 
@@ -149,31 +148,26 @@ class _CameraScreenState extends State<CameraScreen> {
   @override
   Widget build(BuildContext context) {
     Keyboard keyboard_object = Keyboard(15, 5, context);
-    return Scaffold(
-        body: Consumer(
-          builder: (context,ref,child){
-            final text = ref.watch(keyboardTextProvider);
+    return Scaffold(body: Consumer(builder: (context, ref, child) {
+      final text = ref.watch(keyboardTextProvider);
 
-            return Column(
-              children: [
-                Expanded(
-                    flex: 1,
-                    child: Container(
-                      color: Colors.white,
-                      child: Center(
-                        child: Text(text),
-                      ),
-                    )
+      return Column(
+        children: [
+          Expanded(
+              flex: 1,
+              child: Container(
+                color: Colors.white,
+                child: Center(
+                  child: Text(text),
                 ),
-                Expanded(
-                  flex: 2,
-                  child: KeyboardWidget(state: state, keyboard: keyboard_object),
-                )
-              ],
-            );
-          }
-        )
+              )),
+          Expanded(
+            flex: 2,
+            child: KeyboardWidget(state: state, keyboard: keyboard_object),
+          )
+        ],
       );
+    }));
   }
 }
 
