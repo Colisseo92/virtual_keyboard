@@ -1,16 +1,10 @@
-# virtual_keyboard
+# Virtual Keyboard
 
-A new Flutter project.
+A keyboard application designed for individuals with upper limb impairments to assist with communication and accessibility to new technologies.
 
-## Getting Started
 
-This project is a starting point for a Flutter application.
+## Authors
 
-A few resources to get you started if this is your first Flutter project:
+- [@colisseo92](https://github.com/Colisseo92)
+- [@orev](https://github.com/Veronique1919)
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
