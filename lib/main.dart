@@ -1,11 +1,14 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:virtual_keyboard/keyboard/KeyWidget.dart';
-import 'package:virtual_keyboard/keyboard/Keyboard.dart';
 import 'package:virtual_keyboard/keyboard/KeyboardWidget.dart';
+import 'package:virtual_keyboard/keyboard/models/KeyObject.dart';
+import 'package:virtual_keyboard/keyboard/services/keyboardManager.dart';
 import 'package:virtual_keyboard/l10n/l10n.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localization.dart';
@@ -15,7 +18,7 @@ import 'package:camera_android/camera_android.dart'
 import 'package:virtual_keyboard/utils/appState.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
-import 'keyboard/KeyboardManager.dart';
+import 'keyboard/providers/keyboard_state_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -51,12 +54,12 @@ class MyApp extends StatelessWidget {
       home: CameraScreen(camera: camera),
       supportedLocales: L10n.all,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
-      locale: const Locale('kr'),
+      locale: const Locale('fr'),
     );
   }
 }
 
-class CameraScreen extends StatefulWidget {
+class CameraScreen extends ConsumerStatefulWidget {
   final CameraDescription camera;
 
   const CameraScreen({Key? key, required this.camera}) : super(key: key);
@@ -65,13 +68,15 @@ class CameraScreen extends StatefulWidget {
   _CameraScreenState createState() => _CameraScreenState();
 }
 
-class _CameraScreenState extends State<CameraScreen> {
+class _CameraScreenState extends ConsumerState<CameraScreen> {
   late CameraController _controller;
   late Future<void> _initializeControllerFuture;
   late WebSocketChannel _channel;
+  late KeyboardManager keyboardManager;
   bool _isStreaming = false;
   String serverMessage = "Waiting for server response...";
   bool state = true;
+  bool isLoading = true;
   String current_message = "";
   late App app;
 
@@ -101,7 +106,18 @@ class _CameraScreenState extends State<CameraScreen> {
       print("WebSocket connection closed");
     });
 
+    keyboardManager = KeyboardManager();
+    fetchKeyboardData();
+
     app = App(current_message);
+  }
+
+  Future<void> fetchKeyboardData() async{
+    await keyboardManager.populate(ref);
+
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
@@ -147,7 +163,6 @@ class _CameraScreenState extends State<CameraScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Keyboard keyboard_object = Keyboard(15, 5, context);
     return Scaffold(body: Consumer(builder: (context, ref, child) {
       final text = ref.watch(keyboardTextProvider);
 
@@ -163,7 +178,9 @@ class _CameraScreenState extends State<CameraScreen> {
               )),
           Expanded(
             flex: 2,
-            child: KeyboardWidget(state: state, keyboard: keyboard_object),
+            child: isLoading ?
+                Center(child: CircularProgressIndicator())
+                : KeyboardWidget(keyboardManager: keyboardManager),
           )
         ],
       );

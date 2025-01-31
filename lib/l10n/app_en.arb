@@ -34,5 +34,41 @@
   "key_2_2_2": "Q",
   "@key_2_2_2": {
     "description": "second key second line shift"
+  },
+  "key_3_1_1": "Verr Maj",
+  "@key_3_1_1": {
+    "description": "first key third line"
+  },
+  "key_3_2_1": "q",
+  "@key_3_2_1": {
+    "description": "second key third line"
+  },
+  "key_3_2_2": "Q",
+  "@key_3_2_2": {
+    "description": "second key third line shift"
+  },
+  "key_3_3_1": "s",
+  "@key_3_3_1": {
+    "description": "third key third line"
+  },
+  "key_3_3_2": "S",
+  "@key_3_3_2": {
+    "description": "third key third line shift"
+  },
+  "key_3_4_1": "d",
+  "@key_3_4_1": {
+    "description": "third key third line"
+  },
+  "key_3_4_2": "D",
+  "@key_3_4_2": {
+    "description": "third key third line shift"
+  },
+  "key_3_5_1": "f",
+  "@key_3_5_1": {
+    "description": "third key third line"
+  },
+  "key_3_5_2": "F",
+  "@key_3_5_2": {
+    "description": "third key third line shift"
   }
 }

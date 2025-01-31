@@ -1,59 +1,68 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:virtual_keyboard/keyboard/KeyWidget.dart';
-import 'package:virtual_keyboard/keyboard/Keyboard.dart';
+import 'package:virtual_keyboard/keyboard/services/keyboardManager.dart';
 
-import 'KeyObject.dart';
+import 'models/KeyObject.dart';
 
-class KeyboardWidget extends StatefulWidget {
-  bool state;
-  Keyboard keyboard;
-  
+class KeyboardWidget extends ConsumerWidget {
+
+  final KeyboardManager keyboardManager;
+
   KeyboardWidget({
     Key? key,
-    //required this.key_layout,
-    required this.state,
-    required this.keyboard,
-  }): super(key: key);
+    required this.keyboardManager,
+  }) : super(key: key);
 
+  final double space = 8.0;
   @override
-  State<KeyboardWidget> createState() => _KeyboardWidgetState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
 
-class _KeyboardWidgetState extends State<KeyboardWidget> {
-  final int space = 8;
-  @override
-  Widget build(BuildContext context) {
-    return LayoutBuilder(
-        builder: (context, constraints){
-          double width = (constraints.maxWidth - (widget.keyboard.keyboard_width_size-1)*space)/widget.keyboard.keyboard_width_size;
-          double height = (constraints.maxHeight - (widget.keyboard.keyboard_height_size-1)*space)/widget.keyboard.keyboard_height_size;
-          return Column(
-            spacing: 8,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: List.generate(
-              widget.keyboard.keyboard_height_size,
-                (line) => Row(
-                  spacing: 8,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: List.generate(
-                  widget.keyboard.keyboard_width_size-1,
-                      (key){
-                        if(line < widget.keyboard.keyboard_key_layout.length){
-                          if(key < widget.keyboard.keyboard_key_layout[line].length){
-                            KeyObject keyObject = widget.keyboard.keyboard_key_layout[line][key];
-                            return KeyWidgetButton(state: widget.state, width: width*keyObject.key_size+(keyObject.key_size-1)*space, height: height, keyObject: keyObject);
-                          }else{
-                            return SizedBox.shrink();
-                          }
-                        }else{
-                          return SizedBox.shrink();
+    List<List<KeyObject>> keyboardLayout = keyboardManager.keyboardKeyLayout;
+
+    print(keyboardLayout);
+    return SafeArea(
+      child: Column(
+        children: List.generate(
+          keyboardLayout.length,
+            (row) {
+            print("Building row $row");
+              return Expanded(
+                child: SafeArea(
+                  child: Row(
+                    children: List.generate(
+                      keyboardLayout[row].length,
+                        (column) {
+                          return Expanded(
+                            flex: keyboardLayout[row][column].keySize,
+                            child: LayoutBuilder(
+                              builder: (context, constraints){
+                                double width = constraints.maxWidth;
+                                double height = constraints.maxHeight;
+                                return Container(
+                                  color: keyboardLayout[row][column].baseCharacter.keyAction.debugColor,
+                                  width: width,
+                                  height: height,
+                                  child: Center(
+                                    child: Text(
+                                      keyboardLayout[row][column].baseCharacter.character,
+                                    ),
+                                  ),
+                                );
+                              },
+                            )
+                          );
                         }
-                      }
-                  ),
-                )
-            )
-          );
-        }
+                    )
+                  )
+                ),
+              );
+            }
+        ),
+      ),
     );
   }
 }

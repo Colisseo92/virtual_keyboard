@@ -1,9 +1,9 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:virtual_keyboard/keyboard/KeyboardManager.dart';
+import 'package:virtual_keyboard/keyboard/providers/keyboard_state_provider.dart';
 
-import 'KeyObject.dart';
+import 'models/KeyObject.dart';
 import 'models/KeyboardState.dart';
 
 class KeyWidgetButton extends ConsumerWidget {
@@ -51,6 +51,7 @@ class KeyWidgetButton extends ConsumerWidget {
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
           ),
           onPressed: () {
+            /*
             if (this.keyObject.is_holdable) {
               if (currentKeyboardState == KeyboardState.normal) {
                 ref.read(keyboardStateProvider.notifier).state =
@@ -65,12 +66,11 @@ class KeyWidgetButton extends ConsumerWidget {
               ref.read(keyboardTextProvider.notifier).state =
                   currentText + this.keyObject.getKeyDisplayedString();
             }
-            this.keyObject.function!();
+            */
+            this.keyObject.function!(currentKeyboardState);
           },
           child: AutoSizeText(
-            currentKeyboardState == KeyboardState.normal
-                ? this.keyObject.primary_text
-                : this.keyObject.shift_text,
+            this.keyObject.getDisplayedCharacter(keyboardState: currentKeyboardState),
             minFontSize: 20,
             maxFontSize: 50,
             style: TextStyle(
