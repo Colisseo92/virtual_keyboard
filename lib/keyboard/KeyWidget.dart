@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:virtual_keyboard/keyboard/providers/input_text_provider.dart';
 import 'package:virtual_keyboard/keyboard/providers/keyboard_state_provider.dart';
 
 import 'models/KeyObject.dart';
@@ -23,7 +24,7 @@ class KeyWidgetButton extends ConsumerWidget {
 
   Widget build(BuildContext context, WidgetRef ref) {
     final currentKeyboardState = ref.watch(keyboardStateProvider);
-    final currentText = ref.watch(keyboardTextProvider);
+    final currentText = ref.watch(inputTextProvier);
 
     return Container(
       width: this.width,

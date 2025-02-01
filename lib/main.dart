@@ -8,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:virtual_keyboard/keyboard/KeyWidget.dart';
 import 'package:virtual_keyboard/keyboard/KeyboardWidget.dart';
 import 'package:virtual_keyboard/keyboard/models/KeyObject.dart';
+import 'package:virtual_keyboard/keyboard/providers/input_text_provider.dart';
 import 'package:virtual_keyboard/keyboard/services/keyboardManager.dart';
 import 'package:virtual_keyboard/l10n/l10n.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -164,7 +165,7 @@ class _CameraScreenState extends ConsumerState<CameraScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(body: Consumer(builder: (context, ref, child) {
-      final text = ref.watch(keyboardTextProvider);
+      String textOutput = ref.watch(inputTextProvier);
 
       return Column(
         children: [
@@ -173,7 +174,12 @@ class _CameraScreenState extends ConsumerState<CameraScreen> {
               child: Container(
                 color: Colors.white,
                 child: Center(
-                  child: Text(text),
+                  child: Text(
+                      textOutput,
+                    style: TextStyle(
+                      color: Colors.black,
+                    ),
+                  ),
                 ),
               )),
           Expanded(

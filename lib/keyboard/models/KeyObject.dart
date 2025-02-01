@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:virtual_keyboard/keyboard/models/KeyAction.dart';
 import 'package:virtual_keyboard/keyboard/models/KeyCharacter.dart';
+import 'package:virtual_keyboard/keyboard/models/KeyOption.dart';
 import 'package:virtual_keyboard/keyboard/models/KeyState.dart';
 import 'package:virtual_keyboard/keyboard/models/KeyType.dart';
 import 'package:virtual_keyboard/keyboard/models/KeyboardState.dart';
@@ -27,6 +28,8 @@ class KeyObject{
   KeyState keyState;
   KeyType keyType;
 
+  KeyOption keyOption;
+
   int keySize;
 
   Function? function;
@@ -40,6 +43,7 @@ class KeyObject{
         this.shiftCharacter = const KeyCharacter(KeyAction.none, ""),
         this.altgrCharacter = const KeyCharacter(KeyAction.none, ""),
         this.capsLockCharacter = const KeyCharacter(KeyAction.none, ""),
+        this.keyOption = const KeyOption(),
       }
       ){
     this.function ??= default_function;
@@ -54,6 +58,7 @@ class KeyObject{
       shiftCharacter: KeyCharacter.fromJson(json['shift_character']),
       altgrCharacter: KeyCharacter.fromJson(json['altgr_character']),
       capsLockCharacter: KeyCharacter.fromJson(json['caps_lock_character']),
+      keyOption: json.containsKey('options') ? KeyOption.fromJson(json['options'] as Map<String,dynamic>) : KeyOption(),
     );
   }
 
@@ -86,6 +91,9 @@ class KeyObject{
       case KeyboardState.alted:
         return this.altgrCharacter.character;
         break;
+      case KeyboardState.capsLocked:
+        return this.capsLockCharacter.character;
+        break;
       default:
         return "";
     }
@@ -93,7 +101,7 @@ class KeyObject{
 
   @override
   String toString(){
-    return 'KeyObject(baseCharacter: $baseCharacter, shiftCharacter: $shiftCharacter, altgrCharacter:$altgrCharacter, keyState: $keyState, keyType: $keyType)';
+    return 'KeyObject(baseCharacter: $baseCharacter, shiftCharacter: $shiftCharacter, altgrCharacter:$altgrCharacter, caps_lock_character: $capsLockCharacter,keyState: $keyState, keyType: $keyType, keyOption: $keyOption)';
   }
 
 }

@@ -316,7 +316,10 @@
         },
         "key_state": "normal",
         "key_type": "special",
-        "key_size": 2
+        "key_size": 2,
+        "options": {
+          "space": 4
+        }
       },
       {
         "base_character":{
@@ -547,7 +550,37 @@
         },
         "key_state": "normal",
         "key_type": "control",
-        "key_size": 1
+        "key_size": 1,
+        "options": {
+          "accent_control": {
+            "¨": {
+              "a": "ä",
+              "e": "ë",
+              "i": "ï",
+              "o": "ö",
+              "u": "ü",
+              "y": "ÿ",
+              "A": "Ä",
+              "E": "Ë",
+              "I": "Ï",
+              "O": "Ö",
+              "U": "Ü",
+              "Y": "Ÿ"
+            },
+            "^": {
+              "a": "â",
+              "e": "ê",
+              "i": "î",
+              "o": "ô",
+              "u": "û",
+              "A": "Â",
+              "E": "Ê",
+              "I": "Î",
+              "O": "Ô",
+              "U": "Û"
+            }
+          }
+        }
       },
       {
         "base_character":{
@@ -1202,7 +1235,7 @@
           "key_action": "none",
           "character": ""
         },
-        "key_state": "normal",
+        "key_state": "disabled",
         "key_type": "special",
         "key_size": 1
       },
@@ -1246,7 +1279,10 @@
         },
         "key_state": "normal",
         "key_type": "special",
-        "key_size": 7
+        "key_size": 7,
+        "options": {
+          "space": 1
+        }
       },
       {
         "base_character":{

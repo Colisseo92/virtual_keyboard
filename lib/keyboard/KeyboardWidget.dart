@@ -4,7 +4,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:virtual_keyboard/keyboard/KeyWidget.dart';
+import 'package:virtual_keyboard/keyboard/models/KeyboardState.dart';
+import 'package:virtual_keyboard/keyboard/providers/input_text_provider.dart';
+import 'package:virtual_keyboard/keyboard/providers/keyboard_state_provider.dart';
 import 'package:virtual_keyboard/keyboard/services/keyboardManager.dart';
+import 'package:virtual_keyboard/keyboard/services/layouts/FrenchKeyboard.dart';
 
 import 'models/KeyObject.dart';
 
@@ -40,6 +44,8 @@ class KeyboardWidget extends ConsumerWidget {
                             flex: keyboardLayout[row][column].keySize,
                             child: LayoutBuilder(
                               builder: (context, constraints){
+                                final keyboardState = ref.watch(keyboardStateProvider);
+                                final textOutput = ref.watch(inputTextProvier.notifier);
                                 double width = constraints.maxWidth;
                                 double height = constraints.maxHeight;
                                 return Container(
@@ -47,8 +53,15 @@ class KeyboardWidget extends ConsumerWidget {
                                   width: width,
                                   height: height,
                                   child: Center(
-                                    child: Text(
-                                      keyboardLayout[row][column].baseCharacter.character,
+                                    child: ElevatedButton(
+                                        onPressed: (){
+                                          print(FrenchKeyboard().handleKeyPressed(keyboardLayout[row][column],ref));
+                                          textOutput.state += keyboardLayout[row][column].getDisplayedCharacter(keyboardState: keyboardState);
+                                          print(textOutput);
+                                        },
+                                        child: Text(
+                                          keyboardLayout[row][column].getDisplayedCharacter(keyboardState: keyboardState),
+                                        ),
                                     ),
                                   ),
                                 );
