@@ -80,7 +80,6 @@ class KeyObject{
   String getDisplayedCharacter({
     KeyboardState keyboardState = KeyboardState.normal
   }){
-    print("KeyboardState: $keyboardState");
     switch(keyboardState){
       case KeyboardState.normal:
         return this.baseCharacter.character;
@@ -97,6 +96,20 @@ class KeyObject{
       default:
         return "";
     }
+  }
+
+  bool canGetAccent({
+    KeyboardState keyboardState = KeyboardState.normal,
+    String accent = "",
+  }){
+    if(keyOption.hasOption("accent_control")){
+      String displayedCharacter = getDisplayedCharacter(keyboardState: keyboardState);
+      Map<String,Map<String,String>> accents = keyOption.getOption("accent_control");
+      if(accents[accent]!.containsKey(displayedCharacter)){
+        return true;
+      }
+    }
+    return false;
   }
 
   @override

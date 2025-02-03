@@ -9,7 +9,9 @@ import 'package:virtual_keyboard/keyboard/KeyWidget.dart';
 import 'package:virtual_keyboard/keyboard/KeyboardWidget.dart';
 import 'package:virtual_keyboard/keyboard/models/KeyObject.dart';
 import 'package:virtual_keyboard/keyboard/providers/input_text_provider.dart';
+import 'package:virtual_keyboard/keyboard/services/KeyBuffer.dart';
 import 'package:virtual_keyboard/keyboard/services/keyboardManager.dart';
+import 'package:virtual_keyboard/keyboard/strategies/french_string_buffer_strategy.dart';
 import 'package:virtual_keyboard/l10n/l10n.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localization.dart';
@@ -74,6 +76,7 @@ class _CameraScreenState extends ConsumerState<CameraScreen> {
   late Future<void> _initializeControllerFuture;
   late WebSocketChannel _channel;
   late KeyboardManager keyboardManager;
+  late KeyBuffer keyBuffer;
   bool _isStreaming = false;
   String serverMessage = "Waiting for server response...";
   bool state = true;
@@ -107,6 +110,7 @@ class _CameraScreenState extends ConsumerState<CameraScreen> {
       print("WebSocket connection closed");
     });
 
+    keyBuffer = KeyBuffer(ref, FrenchStringBufferStrategy());
     keyboardManager = KeyboardManager();
     fetchKeyboardData();
 
@@ -165,7 +169,7 @@ class _CameraScreenState extends ConsumerState<CameraScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(body: Consumer(builder: (context, ref, child) {
-      String textOutput = ref.watch(inputTextProvier);
+      String textOutput = ref.watch(inputTextProvider);
 
       return Column(
         children: [
@@ -178,6 +182,7 @@ class _CameraScreenState extends ConsumerState<CameraScreen> {
                       textOutput,
                     style: TextStyle(
                       color: Colors.black,
+                      fontSize: 50,
                     ),
                   ),
                 ),
@@ -186,7 +191,7 @@ class _CameraScreenState extends ConsumerState<CameraScreen> {
             flex: 2,
             child: isLoading ?
                 Center(child: CircularProgressIndicator())
-                : KeyboardWidget(keyboardManager: keyboardManager),
+                : KeyboardWidget(ref,keyboardManager: keyboardManager, buffer: keyBuffer,),
           )
         ],
       );

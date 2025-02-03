@@ -4,21 +4,27 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:virtual_keyboard/keyboard/KeyWidget.dart';
+import 'package:virtual_keyboard/keyboard/models/BufferedKey.dart';
+import 'package:virtual_keyboard/keyboard/services/KeyBuffer.dart';
 import 'package:virtual_keyboard/keyboard/models/KeyboardState.dart';
 import 'package:virtual_keyboard/keyboard/providers/input_text_provider.dart';
 import 'package:virtual_keyboard/keyboard/providers/keyboard_state_provider.dart';
 import 'package:virtual_keyboard/keyboard/services/keyboardManager.dart';
 import 'package:virtual_keyboard/keyboard/services/layouts/FrenchKeyboard.dart';
+import 'package:virtual_keyboard/keyboard/strategies/french_string_buffer_strategy.dart';
 
 import 'models/KeyObject.dart';
 
 class KeyboardWidget extends ConsumerWidget {
 
   final KeyboardManager keyboardManager;
+  final KeyBuffer buffer;
 
-  KeyboardWidget({
+  KeyboardWidget(
+      ref,{
     Key? key,
     required this.keyboardManager,
+        required this.buffer,
   }) : super(key: key);
 
   final double space = 8.0;
@@ -26,14 +32,11 @@ class KeyboardWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
 
     List<List<KeyObject>> keyboardLayout = keyboardManager.keyboardKeyLayout;
-
-    print(keyboardLayout);
     return SafeArea(
       child: Column(
         children: List.generate(
           keyboardLayout.length,
             (row) {
-            print("Building row $row");
               return Expanded(
                 child: SafeArea(
                   child: Row(
@@ -45,7 +48,7 @@ class KeyboardWidget extends ConsumerWidget {
                             child: LayoutBuilder(
                               builder: (context, constraints){
                                 final keyboardState = ref.watch(keyboardStateProvider);
-                                final textOutput = ref.watch(inputTextProvier.notifier);
+                                final textOutput = ref.watch(inputTextProvider.notifier);
                                 double width = constraints.maxWidth;
                                 double height = constraints.maxHeight;
                                 return Container(
@@ -55,9 +58,9 @@ class KeyboardWidget extends ConsumerWidget {
                                   child: Center(
                                     child: ElevatedButton(
                                         onPressed: (){
-                                          print(FrenchKeyboard().handleKeyPressed(keyboardLayout[row][column],ref));
-                                          textOutput.state += keyboardLayout[row][column].getDisplayedCharacter(keyboardState: keyboardState);
-                                          print(textOutput);
+                                          FrenchKeyboard().handleKeyPressed(keyboardLayout[row][column],ref);
+                                          BufferedKey bk = BufferedKey(key: keyboardLayout[row][column], capturedState: keyboardState);
+                                          buffer.addKey(bk);
                                         },
                                         child: Text(
                                           keyboardLayout[row][column].getDisplayedCharacter(keyboardState: keyboardState),
@@ -79,4 +82,3 @@ class KeyboardWidget extends ConsumerWidget {
     );
   }
 }
-

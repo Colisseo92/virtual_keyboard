@@ -606,7 +606,7 @@
       {
         "base_character":{
           "key_action": "submit",
-          "character": "Enter"
+          "character": "Entrée"
         },
         "shift_character":{
           "key_action": "none",
@@ -644,7 +644,7 @@
           "character": ""
         },
         "key_state": "normal",
-        "key_type": "special",
+        "key_type": "toggle",
         "key_size": 2
       },
       {

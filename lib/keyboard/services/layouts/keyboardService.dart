@@ -8,9 +8,11 @@ import 'package:virtual_keyboard/utils/StringUtils.dart';
 
 abstract class KeyboardService{
   String handleKeyPressed(KeyObject key, WidgetRef ref){
+    print("there");
     final keyboardState = ref.read(keyboardStateProvider.notifier).state;
+    print(keyboardState);
     switch(key.keyType){
-      case KeyType.special:
+      case KeyType.special || KeyType.toggle:
         /*
         tab,enter,verr maj,win, space
          */
@@ -18,6 +20,7 @@ abstract class KeyboardService{
           return "<enter>";
         }else if(key.baseCharacter.keyAction == KeyAction.toggle){
           toggleCapsLock(ref);
+          print(keyboardState);
           return "<capslock>";
         }else if(key.keyOption.hasOption("space")){
           return multiplyString("<space>",key.keyOption.getOption("space"));

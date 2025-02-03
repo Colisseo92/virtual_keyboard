@@ -24,7 +24,7 @@ class KeyWidgetButton extends ConsumerWidget {
 
   Widget build(BuildContext context, WidgetRef ref) {
     final currentKeyboardState = ref.watch(keyboardStateProvider);
-    final currentText = ref.watch(inputTextProvier);
+    final currentText = ref.watch(inputTextProvider);
 
     return Container(
       width: this.width,

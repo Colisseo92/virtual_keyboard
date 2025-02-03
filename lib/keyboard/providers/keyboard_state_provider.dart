@@ -26,11 +26,9 @@ void toggleAlted(StateController<KeyboardState> stateController){
 void toggleCapsLock(WidgetRef ref){
     final keyboardState = ref.watch(keyboardStateProvider.notifier);
     if(keyboardState.state == KeyboardState.capsLocked){
-        print("Change mode : Exited CapsLockedMod");
         keyboardState.state = KeyboardState.normal;
     }else{
         keyboardState.state = KeyboardState.capsLocked;
-        print("Change mode : Entered CapsLock mode");
     }
 }
 

@@ -7,6 +7,7 @@ class FrenchKeyboard extends KeyboardService{
 
   @override
   String handleKeyPressed(KeyObject key, WidgetRef ref){
+    print("here");
     return super.handleKeyPressed(key, ref);
   }
 }
