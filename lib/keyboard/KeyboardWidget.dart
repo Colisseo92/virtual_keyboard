@@ -58,12 +58,14 @@ class KeyboardWidget extends ConsumerWidget {
                                   child: Center(
                                     child: ElevatedButton(
                                         onPressed: (){
-                                          FrenchKeyboard().handleKeyPressed(keyboardLayout[row][column],ref);
                                           BufferedKey bk = BufferedKey(key: keyboardLayout[row][column], capturedState: keyboardState);
-                                          buffer.addKey(bk);
+                                          FrenchKeyboard().handleKeyPressed(bk,ref,buffer);
                                         },
                                         child: Text(
                                           keyboardLayout[row][column].getDisplayedCharacter(keyboardState: keyboardState),
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                          ),
                                         ),
                                     ),
                                   ),

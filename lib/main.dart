@@ -18,6 +18,8 @@ import 'package:flutter_gen/gen_l10n/app_localization.dart';
 import 'package:camera_android/camera_android.dart'
     if (dart.library.html) 'package:camera_web/camera_web.dart'
     if (dart.library.io) 'package:camera/camera.dart';
+import 'package:virtual_keyboard/predictor/PredictorWidget.dart';
+import 'package:virtual_keyboard/predictor/models/Prediction.dart';
 import 'package:virtual_keyboard/utils/appState.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
@@ -75,10 +77,15 @@ class _CameraScreenState extends ConsumerState<CameraScreen> {
   late CameraController _controller;
   late Future<void> _initializeControllerFuture;
   late WebSocketChannel _channel;
+  late WebSocketChannel _text_channel;
   late KeyboardManager keyboardManager;
   late KeyBuffer keyBuffer;
   bool _isStreaming = false;
+  bool _isTextStreaming = false;
   String serverMessage = "Waiting for server response...";
+  String textServerMessage = "Waiting for text server response...";
+  Map<String, dynamic>? serverData;
+  Prediction prediction = Prediction();
   bool state = true;
   bool isLoading = true;
   String current_message = "";
@@ -100,6 +107,10 @@ class _CameraScreenState extends ConsumerState<CameraScreen> {
       Uri.parse('ws://127.0.0.1:8000/ws'),
     );
 
+    _text_channel = WebSocketChannel.connect(
+      Uri.parse('ws://127.0.0.1:8000/text'),
+    );
+
     _channel.stream.listen((message) {
       setState(() {
         serverMessage = message;
@@ -107,6 +118,22 @@ class _CameraScreenState extends ConsumerState<CameraScreen> {
     }, onError: (error) {
       print("WebSocket error: $error");
     }, onDone: () {
+      print("WebSocket connection closed");
+    });
+
+    _text_channel.stream.listen((message){
+      setState(() {
+        try{
+          serverData = json.decode(message);
+          prediction = Prediction.fromJson(serverData!);
+          serverMessage = serverData?["status"] == 'valid' ? "Predictions received" : "No predictions";
+        }catch(e){
+          serverMessage = "Error decoding Json";
+        }
+      });
+    }, onError: (error){
+      print("WebSocket error: $error");
+    }, onDone: (){
       print("WebSocket connection closed");
     });
 
@@ -129,7 +156,41 @@ class _CameraScreenState extends ConsumerState<CameraScreen> {
   void dispose() {
     _controller.dispose();
     _channel.sink.close();
+    _text_channel.sink.close();
     super.dispose();
+  }
+
+  void _start_text_streaming() async{
+    if(_isTextStreaming) return;
+
+    setState(() {
+      _isTextStreaming = true;
+    });
+
+    while (_isTextStreaming) {
+      try {
+        String word = ref.watch(inputTextProvider).toString();
+        List<String> words = word.split(" ");
+        if(words.length > 1){
+          _text_channel.sink.add(words.last);
+        }
+      } catch (e) {
+        print('Error while streaming: $e');
+        setState(() {
+          _isTextStreaming = false;
+        });
+        break;
+      }
+
+      // Add a small delay to limit the frame rate
+      await Future.delayed(const Duration(milliseconds: 100)); // Approx 10 FPS
+    }
+  }
+
+  void _stopTextStreaming() {
+    setState(() {
+      _isTextStreaming = false;
+    });
   }
 
   void _startStreaming() async {
@@ -170,25 +231,76 @@ class _CameraScreenState extends ConsumerState<CameraScreen> {
   Widget build(BuildContext context) {
     return Scaffold(body: Consumer(builder: (context, ref, child) {
       String textOutput = ref.watch(inputTextProvider);
-
+      print(textServerMessage);
+      print(prediction.status);
+      print(prediction.predictions);
       return Column(
         children: [
           Expanded(
-              flex: 1,
-              child: Container(
-                color: Colors.white,
-                child: Center(
-                  child: Text(
-                      textOutput,
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 50,
-                    ),
+              flex: 3,
+              child: Row(
+                children: [
+                  Expanded(
+                    flex:1,
+                    child: FutureBuilder<void>(
+                        future: _initializeControllerFuture,
+                        builder: (context, snapshot){
+                          if(snapshot.connectionState == ConnectionState.done){
+                            return CameraPreview(_controller);
+                          }else{
+                            return const Center(child: CircularProgressIndicator(),);
+                          }
+                        }),
                   ),
-                ),
-              )),
+                  Expanded(
+                    flex:1,
+                    child: Column(
+                      children: [
+                        Expanded(
+                          flex:1,
+                            child: ClipRect(
+                              child: Wrap(
+                                children: [
+                                  ElevatedButton(
+                                    onPressed: _isStreaming ? null : _startStreaming,
+                                    child: const Text('Start Streaming'),
+                                  ),
+                                  const SizedBox(width: 10),
+                                  ElevatedButton(
+                                    onPressed: _isStreaming ? _stopStreaming : null,
+                                    child: const Text('Stop Streaming'),
+                                  ),
+                                  ElevatedButton(
+                                    onPressed: _isTextStreaming ? null : _start_text_streaming,
+                                    child: const Text('Start Text Streaming'),
+                                  ),
+                                  const SizedBox(width: 10),
+                                  ElevatedButton(
+                                    onPressed: _isTextStreaming ? _stopTextStreaming : null,
+                                    child: const Text('Stop Text Streaming'),
+                                  ),
+                                ],
+                              ),
+                            )
+                        ),
+                        Expanded(child: Text(
+                            textOutput,
+                          style: TextStyle(
+                            fontSize: 30,
+                          ),
+                        ))
+                      ],
+                    )
+                  )
+                ],
+              )
+          ),
           Expanded(
-            flex: 2,
+            flex:1,
+            child: PredictorWidget(ref,prediction),
+          ),
+          Expanded(
+            flex: 5,
             child: isLoading ?
                 Center(child: CircularProgressIndicator())
                 : KeyboardWidget(ref,keyboardManager: keyboardManager, buffer: keyBuffer,),

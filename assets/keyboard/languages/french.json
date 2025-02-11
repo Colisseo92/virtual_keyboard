@@ -37,7 +37,7 @@
         },
         "caps_lock_character":{
           "key_action": "none",
-          "character": ""
+          "character": "1"
         },
         "key_state": "normal",
         "key_type": "mixed",
@@ -58,7 +58,7 @@
         },
         "caps_lock_character":{
           "key_action": "none",
-          "character": ""
+          "character": "2"
         },
         "key_state": "normal",
         "key_type": "mixed",
@@ -79,7 +79,7 @@
         },
         "caps_lock_character":{
           "key_action": "none",
-          "character": ""
+          "character": "3"
         },
         "key_state": "normal",
         "key_type": "mixed",
@@ -100,7 +100,7 @@
         },
         "caps_lock_character":{
           "key_action": "none",
-          "character": ""
+          "character": "4"
         },
         "key_state": "normal",
         "key_type": "mixed",
@@ -121,7 +121,7 @@
         },
         "caps_lock_character":{
           "key_action": "none",
-          "character": ""
+          "character": "5"
         },
         "key_state": "normal",
         "key_type": "mixed",
@@ -142,7 +142,7 @@
         },
         "caps_lock_character":{
           "key_action": "none",
-          "character": ""
+          "character": "6"
         },
         "key_state": "normal",
         "key_type": "mixed",
@@ -163,7 +163,7 @@
         },
         "caps_lock_character":{
           "key_action": "none",
-          "character": ""
+          "character": "7"
         },
         "key_state": "normal",
         "key_type": "mixed",
@@ -184,7 +184,7 @@
         },
         "caps_lock_character":{
           "key_action": "none",
-          "character": ""
+          "character": "8"
         },
         "key_state": "normal",
         "key_type": "mixed",
@@ -205,7 +205,7 @@
         },
         "caps_lock_character":{
           "key_action": "none",
-          "character": ""
+          "character": "9"
         },
         "key_state": "normal",
         "key_type": "mixed",
@@ -226,7 +226,7 @@
         },
         "caps_lock_character":{
           "key_action": "none",
-          "character": ""
+          "character": "0"
         },
         "key_state": "normal",
         "key_type": "mixed",
@@ -247,7 +247,7 @@
         },
         "caps_lock_character":{
           "key_action": "none",
-          "character": ""
+          "character": "°"
         },
         "key_state": "normal",
         "key_type": "mixed",
@@ -268,7 +268,7 @@
         },
         "caps_lock_character":{
           "key_action": "none",
-          "character": ""
+          "character": "+"
         },
         "key_state": "normal",
         "key_type": "mixed",
