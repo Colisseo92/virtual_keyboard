@@ -24,6 +24,8 @@ abstract class KeyboardService{
           return "";
         }else if(key.keyOption.hasOption("space")){
           return multiplyString(" ",key.keyOption.getOption("space"));
+        }else if(key.baseCharacter.keyAction == KeyAction.delete){
+          return "<delete>";
         }
         return "<default>";
       default:

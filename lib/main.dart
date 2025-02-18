@@ -20,6 +20,7 @@ import 'package:camera_android/camera_android.dart'
     if (dart.library.io) 'package:camera/camera.dart';
 import 'package:virtual_keyboard/predictor/PredictorWidget.dart';
 import 'package:virtual_keyboard/predictor/models/Prediction.dart';
+import 'package:virtual_keyboard/theme/CustomTheme.dart';
 import 'package:virtual_keyboard/utils/appState.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
@@ -90,6 +91,7 @@ class _CameraScreenState extends ConsumerState<CameraScreen> {
   bool isLoading = true;
   String current_message = "";
   late App app;
+  CustomTheme customTheme = CustomTheme();
 
   @override
   void initState() {
@@ -234,78 +236,82 @@ class _CameraScreenState extends ConsumerState<CameraScreen> {
       print(textServerMessage);
       print(prediction.status);
       print(prediction.predictions);
-      return Column(
-        children: [
-          Expanded(
-              flex: 3,
-              child: Row(
-                children: [
-                  Expanded(
-                    flex:1,
-                    child: FutureBuilder<void>(
-                        future: _initializeControllerFuture,
-                        builder: (context, snapshot){
-                          if(snapshot.connectionState == ConnectionState.done){
-                            return CameraPreview(_controller);
-                          }else{
-                            return const Center(child: CircularProgressIndicator(),);
-                          }
-                        }),
-                  ),
-                  Expanded(
-                    flex:1,
-                    child: Column(
-                      children: [
-                        Expanded(
-                          flex:1,
-                            child: ClipRect(
-                              child: Wrap(
-                                children: [
-                                  ElevatedButton(
-                                    onPressed: _isStreaming ? null : _startStreaming,
-                                    child: const Text('Start Streaming'),
-                                  ),
-                                  const SizedBox(width: 10),
-                                  ElevatedButton(
-                                    onPressed: _isStreaming ? _stopStreaming : null,
-                                    child: const Text('Stop Streaming'),
-                                  ),
-                                  ElevatedButton(
-                                    onPressed: _isTextStreaming ? null : _start_text_streaming,
-                                    child: const Text('Start Text Streaming'),
-                                  ),
-                                  const SizedBox(width: 10),
-                                  ElevatedButton(
-                                    onPressed: _isTextStreaming ? _stopTextStreaming : null,
-                                    child: const Text('Stop Text Streaming'),
-                                  ),
-                                ],
-                              ),
-                            )
-                        ),
-                        Expanded(child: Text(
-                            textOutput,
-                          style: TextStyle(
-                            fontSize: 30,
+      return Container(
+        color: customTheme.getBackgroundColor(),
+        child: Column(
+          children: [
+            Expanded(
+                flex: 3,
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex:1,
+                      child: FutureBuilder<void>(
+                          future: _initializeControllerFuture,
+                          builder: (context, snapshot){
+                            if(snapshot.connectionState == ConnectionState.done){
+                              return CameraPreview(_controller);
+                            }else{
+                              return const Center(child: CircularProgressIndicator(),);
+                            }
+                          }),
+                    ),
+                    Expanded(
+                      flex:1,
+                      child: Column(
+                        children: [
+                          Expanded(
+                            flex:1,
+                              child: ClipRect(
+                                child: Wrap(
+                                  children: [
+                                    ElevatedButton(
+                                      onPressed: _isStreaming ? null : _startStreaming,
+                                      child: const Text('Start Streaming'),
+                                    ),
+                                    const SizedBox(width: 10),
+                                    ElevatedButton(
+                                      onPressed: _isStreaming ? _stopStreaming : null,
+                                      child: const Text('Stop Streaming'),
+                                    ),
+                                    ElevatedButton(
+                                      onPressed: _isTextStreaming ? null : _start_text_streaming,
+                                      child: const Text('Start Text Streaming'),
+                                    ),
+                                    const SizedBox(width: 10),
+                                    ElevatedButton(
+                                      onPressed: _isTextStreaming ? _stopTextStreaming : null,
+                                      child: const Text('Stop Text Streaming'),
+                                    ),
+                                  ],
+                                ),
+                              )
                           ),
-                        ))
-                      ],
+                          Expanded(child: Text(
+                              textOutput,
+                            style: TextStyle(
+                              fontSize: 30,
+                              color: customTheme.themes.textColor,
+                            ),
+                          ))
+                        ],
+                      )
                     )
-                  )
-                ],
-              )
-          ),
-          Expanded(
-            flex:1,
-            child: PredictorWidget(ref,prediction),
-          ),
-          Expanded(
-            flex: 5,
-            child: isLoading ?
-                Center(child: CircularProgressIndicator())
-                : KeyboardWidget(ref,keyboardManager: keyboardManager, buffer: keyBuffer,),
-          )
-        ],
+                  ],
+                )
+            ),
+            Expanded(
+              flex:1,
+              child: PredictorWidget(ref,prediction),
+            ),
+            Expanded(
+              flex: 5,
+              child: isLoading ?
+                  Center(child: CircularProgressIndicator())
+                  : KeyboardWidget(ref,keyboardManager: keyboardManager, buffer: keyBuffer,),
+            )
+          ],
+        ),
       );
     }));
   }
