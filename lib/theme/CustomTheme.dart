@@ -8,7 +8,7 @@ class CustomTheme{
 
   const CustomTheme(
   {
-    this.themes = Themes.NORMAL,
+    this.themes = Themes.LIGHT,
   }
   );
 

@@ -18,6 +18,10 @@ import 'package:flutter_gen/gen_l10n/app_localization.dart';
 import 'package:camera_android/camera_android.dart'
     if (dart.library.html) 'package:camera_web/camera_web.dart'
     if (dart.library.io) 'package:camera/camera.dart';
+import 'package:virtual_keyboard/parameters/ParameterPage.dart';
+import 'package:virtual_keyboard/parameters/parameterWidget.dart';
+import 'package:virtual_keyboard/parameters/services/ConfigFileManager.dart';
+import 'package:virtual_keyboard/parameters/services/ParameterManager.dart';
 import 'package:virtual_keyboard/predictor/PredictorWidget.dart';
 import 'package:virtual_keyboard/predictor/models/Prediction.dart';
 import 'package:virtual_keyboard/theme/CustomTheme.dart';
@@ -28,14 +32,15 @@ import 'keyboard/providers/keyboard_state_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  await ConfigFileManager.createConfigFileIfNotExists();
   try {
     final cameras = await availableCameras();
+    final parameters = Parameter.fromJson(await ConfigFileManager.loadConfig());
     print("Cameras found: ${cameras.length}");
 
     if (cameras.isNotEmpty) {
       print("Using camera: ${cameras.first.name}");
-      runApp(ProviderScope(child: MyApp(camera: cameras.first)));
+      runApp(ProviderScope(child: MyApp(camera: cameras.first, parameter: parameters,)));
     } else {
       print("No cameras available!");
       runApp(ErrorApp(message: "No cameras available!"));
@@ -48,27 +53,31 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   final CameraDescription camera;
+  final Parameter parameter;
 
-  MyApp({Key? key, required this.camera}) : super(key: key) {
+  MyApp({Key? key, required this.camera, required this.parameter}) : super(key: key) {
     print("MyApp initialized with camera: ${camera.name}");
+    print("MyApp initialized with parameters : ${parameter}");
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter WebSocket Camera Stream',
-      home: CameraScreen(camera: camera),
+      home: CameraScreen(camera: camera, parameter: parameter,),
       supportedLocales: L10n.all,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
-      locale: const Locale('fr'),
+      locale: const Locale('en'),
     );
   }
 }
 
 class CameraScreen extends ConsumerStatefulWidget {
   final CameraDescription camera;
+  final Parameter parameter;
 
-  const CameraScreen({Key? key, required this.camera}) : super(key: key);
+  const CameraScreen({Key? key, required this.camera, required this.parameter}) : super(key: key);
 
   @override
   _CameraScreenState createState() => _CameraScreenState();
@@ -244,6 +253,7 @@ class _CameraScreenState extends ConsumerState<CameraScreen> {
                 flex: 3,
                 child: Row(
                   children: [
+                    /*
                     Expanded(
                       flex:1,
                       child: FutureBuilder<void>(
@@ -255,16 +265,28 @@ class _CameraScreenState extends ConsumerState<CameraScreen> {
                               return const Center(child: CircularProgressIndicator(),);
                             }
                           }),
-                    ),
+                    ),*/
                     Expanded(
                       flex:1,
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Expanded(
                             flex:1,
                               child: ClipRect(
                                 child: Wrap(
                                   children: [
+                                    IconButton(
+                                      icon: Icon(Icons.settings, size: 50),
+                                      onPressed: () {
+                                        //showSettingsMenu(context,widget.parameter); // Open settings menu
+                                        Navigator.push(
+                                        context,
+                                        MaterialPageRoute(builder: (context) {
+                                          return ParameterPage();
+                                        }));
+                                      },
+                                    ),
                                     ElevatedButton(
                                       onPressed: _isStreaming ? null : _startStreaming,
                                       child: const Text('Start Streaming'),
@@ -290,8 +312,8 @@ class _CameraScreenState extends ConsumerState<CameraScreen> {
                           Expanded(child: Text(
                               textOutput,
                             style: TextStyle(
-                              fontSize: 30,
-                              color: customTheme.themes.textColor,
+                              fontSize: 50,
+                              color: Colors.black,
                             ),
                           ))
                         ],

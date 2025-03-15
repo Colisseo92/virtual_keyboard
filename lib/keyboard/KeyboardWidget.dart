@@ -52,52 +52,7 @@ class KeyboardWidget extends ConsumerWidget {
                                 final textOutput = ref.watch(inputTextProvider.notifier);
                                 double width = constraints.maxWidth;
                                 double height = constraints.maxHeight;
-                                return Container(
-                                  width: width,
-                                  height: height,
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey[300],
-                                    borderRadius: BorderRadius.circular(10),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Color.fromRGBO(255, 255, 255, 0.7),
-                                        offset: Offset(-5, -5),
-                                        blurRadius: 10,
-                                      ),
-                                      BoxShadow(
-                                        color: Color.fromRGBO(0, 0, 0, 0.2),
-                                        offset: Offset(-5,-5),
-                                        blurRadius: 10,
-                                      )
-                                    ],
-                                    gradient: LinearGradient(
-                                      begin: Alignment.topLeft,
-                                      end: Alignment.bottomRight,
-                                      colors:[
-                                        Color.fromRGBO(224, 224, 224, 1.0),
-                                        Color.fromRGBO(214, 214, 214, 1.0),
-                                      ]
-                                    )
-                                  ),
-                                  margin: EdgeInsets.all(5),
-                                  child: ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      shadowColor: Colors.transparent,
-                                      elevation: 0,
-                                      backgroundColor: Colors.transparent,
-                                    ),
-                                      onPressed: (){
-                                        BufferedKey bk = BufferedKey(key: keyboardLayout[row][column], capturedState: keyboardState);
-                                        PhoneKeyboardService().handleKeyPressed(bk,ref,buffer);
-                                      },
-                                      child: Text(
-                                        keyboardLayout[row][column].getDisplayedCharacter(keyboardState: keyboardState),
-                                        style: TextStyle(
-                                          fontSize: 40,
-                                        ),
-                                      ),
-                                  ),
-                                );
+                                return KeyWidgetButton(keyObject: keyboardLayout[row][column],width: width,height:height,buffer:buffer);
                               },
                             )
                           );

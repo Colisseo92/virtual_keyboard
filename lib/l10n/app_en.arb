@@ -15,6 +15,14 @@
   "@title": {
     "description": "title of the app"
   },
+  "first_setting": "Text Size",
+  "@first_setting": {
+    "description": "text displayed inside the setting menu to change the size of the text"
+  },
+  "second_setting": "Theme",
+  "@second_setting": {
+    "description": "text displayed inside the setting menu to change the theme of the app"
+  },
   "key_1_1_1": "²",
   "@key_1_1": {
     "description": "first key first line"
