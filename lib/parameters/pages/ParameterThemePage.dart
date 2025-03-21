@@ -97,12 +97,6 @@ class _ParameterThemePageState extends ConsumerState<ParameterThemePage> {
                                     Expanded(
                                       child: ThemeSelectionWidget(id:3),
                                     ),
-                                    Expanded(
-                                      child: ThemeSelectionWidget(id:4),
-                                    ),
-                                    Expanded(
-                                      child: ThemeSelectionWidget(id:5),
-                                    ),
                                   ],
                                 ),
                               ),

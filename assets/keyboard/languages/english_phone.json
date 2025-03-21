@@ -4,15 +4,15 @@
       {
         "base_character":{
           "key_action": "input",
-          "character": "a"
+          "character": "q"
         },
         "shift_character":{
           "key_action": "input",
-          "character": "A"
+          "character": "Q"
         },
         "altgr_character":{
           "key_action": "input",
-          "character": "A"
+          "character": "Q"
         },
         "caps_lock_character":{
           "key_action": "input",
@@ -25,15 +25,15 @@
       {
         "base_character":{
           "key_action": "input",
-          "character": "z"
+          "character": "w"
         },
         "shift_character":{
           "key_action": "input",
-          "character": "Z"
+          "character": "W"
         },
         "altgr_character":{
           "key_action": "input",
-          "character": "Z"
+          "character": "W"
         },
         "caps_lock_character":{
           "key_action": "input",
@@ -216,15 +216,15 @@
       {
         "base_character":{
           "key_action": "input",
-          "character": "q"
+          "character": "a"
         },
         "shift_character":{
           "key_action": "input",
-          "character": "Q"
+          "character": "A"
         },
         "altgr_character":{
           "key_action": "input",
-          "character": "Q"
+          "character": "A"
         },
         "caps_lock_character":{
           "key_action": "input",
@@ -401,27 +401,6 @@
         "key_state": "normal",
         "key_type": "mixed",
         "key_size": 1
-      },
-      {
-        "base_character":{
-          "key_action": "input",
-          "character": "m"
-        },
-        "shift_character":{
-          "key_action": "input",
-          "character": "M"
-        },
-        "altgr_character":{
-          "key_action": "input",
-          "character": "M"
-        },
-        "caps_lock_character":{
-          "key_action": "input",
-          "character": "/"
-        },
-        "key_state": "normal",
-        "key_type": "mixed",
-        "key_size": 1
       }
     ],
     [
@@ -456,15 +435,15 @@
       {
         "base_character":{
           "key_action": "input",
-          "character": "w"
+          "character": "z"
         },
         "shift_character":{
           "key_action": "input",
-          "character": "W"
+          "character": "Z"
         },
         "altgr_character":{
           "key_action": "input",
-          "character": "W"
+          "character": "Z"
         },
         "caps_lock_character":{
           "key_action": "input",
@@ -582,15 +561,15 @@
       {
         "base_character":{
           "key_action": "input",
-          "character": "'"
+          "character": "m"
         },
         "shift_character":{
           "key_action": "input",
-          "character": "?"
+          "character": "M"
         },
         "altgr_character":{
           "key_action": "input",
-          "character": "'"
+          "character": "M"
         },
         "caps_lock_character":{
           "key_action": "input",

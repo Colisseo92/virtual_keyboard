@@ -3,9 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:virtual_keyboard/keyboard/models/BufferedKey.dart';
 import 'package:virtual_keyboard/keyboard/providers/input_text_provider.dart';
+import 'package:virtual_keyboard/keyboard/providers/keyboard_custom_state_provider.dart';
 import 'package:virtual_keyboard/keyboard/providers/keyboard_state_provider.dart';
 import 'package:virtual_keyboard/keyboard/services/KeyBuffer.dart';
 import 'package:virtual_keyboard/keyboard/services/layouts/PhoneKeyboardService.dart';
+import 'package:virtual_keyboard/parameters/models/OptionTextSize.dart';
+import 'package:virtual_keyboard/parameters/providers/parameter_provider.dart';
+import 'package:virtual_keyboard/theme/models/Themes.dart';
+import 'package:virtual_keyboard/theme/styles/ThemeCustomText.dart';
 
 import 'models/KeyObject.dart';
 import 'models/KeyboardState.dart';
@@ -25,53 +30,56 @@ class KeyWidgetButton extends ConsumerWidget {
   }) : super(key: key);
 
   Widget build(BuildContext context, WidgetRef ref) {
-    final keyboardState = ref.watch(keyboardStateProvider);
-
-    return Container(
-      width: width,
-      height: height,
-      decoration: BoxDecoration(
-          color: Colors.grey[300],
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: [
-            BoxShadow(
-              color: Color.fromRGBO(255, 255, 255, 0.7),
-              offset: Offset(-5, -5),
-              blurRadius: 10,
-            ),
-            BoxShadow(
-              color: Color.fromRGBO(0, 0, 0, 0.2),
-              offset: Offset(-5,-5),
-              blurRadius: 10,
-            )
-          ],
-          gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors:[
-                Color.fromRGBO(224, 224, 224, 1.0),
-                Color.fromRGBO(214, 214, 214, 1.0),
-              ]
-          )
-      ),
-      margin: EdgeInsets.all(5),
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          shadowColor: Colors.transparent,
-          elevation: 0,
-          backgroundColor: Colors.transparent,
-        ),
-        onPressed: (){
-          BufferedKey bk = BufferedKey(key: this.keyObject, capturedState: keyboardState);
-          PhoneKeyboardService().handleKeyPressed(bk,ref,this.buffer);
+    return Consumer(builder: (context,ref,child){
+      final param_provider = ref.watch(parameter_provider);
+      return param_provider.when(
+        error: (error,stack) => Text("Error: $error"),
+        loading: (){
+          return CircularProgressIndicator();
         },
-        child: Text(
-          this.keyObject.getDisplayedCharacter(keyboardState: keyboardState),
-          style: TextStyle(
-            fontSize: 40,
-          ),
-        ),
-      ),
-    );
+        data: (parameter){
+          final keyboardState = ref.watch(keyboardStateProvider);
+          OptionTextSize optionTextSize = OptionTextSize.fromString(parameter.getParameter("policeSize").value);
+          Themes currentTheme = Themes.fromString(parameter.getParameter("theme").value);
+          return Container(
+            width: width,
+            height: height,
+            decoration: BoxDecoration(
+              color: currentTheme.keyColor,
+              borderRadius: BorderRadius.circular(10),
+              boxShadow: [
+                BoxShadow(
+                  color: Color.fromRGBO(255, 255, 255, 0.7),
+                  offset: Offset(-5, -5),
+                  blurRadius: 10,
+                ),
+                BoxShadow(
+                  color: Color.fromRGBO(0, 0, 0, 0.2),
+                  offset: Offset(-5,-5),
+                  blurRadius: 10,
+                )
+              ],
+            ),
+            margin: EdgeInsets.all(5),
+            child: MaterialButton(
+              hoverColor: Colors.purple,
+              splashColor: Colors.transparent,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              onPressed: (){
+                BufferedKey bk = BufferedKey(key: this.keyObject, capturedState: keyboardState);
+                PhoneKeyboardService().handleKeyPressed(bk,ref,this.buffer);
+              },
+              child: Text(
+                this.keyObject.getDisplayedCharacter(keyboardState: keyboardState),
+                style: TextStyle(
+                  fontSize: ThemeCustomText.getBasicTextSize(context, optionTextSize),
+                  color: currentTheme.textColor,
+                ),
+              ),
+            ),
+          );
+        },
+      );
+    });
   }
 }
