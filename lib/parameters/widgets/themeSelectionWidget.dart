@@ -27,10 +27,11 @@ class _ThemeSelectionWidgetState extends ConsumerState<ThemeSelectionWidget> {
           error: (error,stack) => Text("Error: $error"),
           loading: () => CircularProgressIndicator(),
           data: (parameter){
+            Themes currentTheme = Themes.fromString(parameter.getParameter("theme").value);
             return LayoutBuilder(builder: (context, constraints){
               final size = min(constraints.maxWidth, constraints.maxHeight);
               return Container(
-                color: Colors.white,
+                color: currentTheme.backgroundColor,
                 child: Center(
                   child: ElevatedButton(
                       onPressed: (){
@@ -38,7 +39,7 @@ class _ThemeSelectionWidgetState extends ConsumerState<ThemeSelectionWidget> {
                         ref.read(themeCheckboxSelectionProvider.notifier).state = widget.id;
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: ref.watch(themeCheckboxSelectionProvider) == widget.id ? Colors.purple : Colors.blue,
+                        backgroundColor: ref.watch(themeCheckboxSelectionProvider) == widget.id ? Colors.purple : Themes.fromId(widget.id).keyColor,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
@@ -46,7 +47,12 @@ class _ThemeSelectionWidgetState extends ConsumerState<ThemeSelectionWidget> {
                         maximumSize: Size(size/2,size/2),
                         shadowColor: Colors.transparent,
                       ),
-                      child: Text("${Themes.fromId(widget.id).name}"),
+                      child: Text(
+                          "${Themes.fromId(widget.id).name}",
+                          style: TextStyle(
+                            color: Themes.fromId(widget.id).textColor,
+                          ),
+                      ),
                   ),
                 ),
               );

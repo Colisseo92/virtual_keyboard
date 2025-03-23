@@ -6,6 +6,7 @@ import 'package:virtual_keyboard/parameters/providers/TextSizeSliderProvider.dar
 import 'package:virtual_keyboard/parameters/providers/parameter_provider.dart';
 import 'package:virtual_keyboard/parameters/services/ConfigFileManager.dart';
 import 'package:virtual_keyboard/parameters/services/ParameterManager.dart';
+import 'package:virtual_keyboard/theme/models/Themes.dart';
 import 'package:virtual_keyboard/theme/styles/ThemeCustomText.dart';
 
 class ParameterTextSizePage extends ConsumerStatefulWidget {
@@ -29,8 +30,9 @@ class _ParameterTextSizePageState extends ConsumerState<ParameterTextSizePage> {
             return Center(child: CircularProgressIndicator());
           },
           data: (parameter){
+            Themes currentTheme = Themes.fromString(parameter.getParameter("theme").value);
             return Container(
-              color: Colors.white,
+              color: currentTheme.backgroundColor,
               child: Column(
                 children: [
                   Expanded(
@@ -48,7 +50,7 @@ class _ParameterTextSizePageState extends ConsumerState<ParameterTextSizePage> {
                                         child: Row(
                                           children: [
                                             IconButton(
-                                              icon: Icon(Icons.arrow_back_ios_new, size:50),
+                                              icon: Icon(Icons.arrow_back_ios_new, size:50, color: currentTheme.textColor,),
                                               onPressed: () async {
                                                 String size_parameter_value = OptionTextSize.fromNumber(slider_provider.toInt()).display;
                                                 parameter.setParameter("policeSize", size_parameter_value);
@@ -58,7 +60,7 @@ class _ParameterTextSizePageState extends ConsumerState<ParameterTextSizePage> {
                                             ),
                                             Spacer(),
                                             IconButton(
-                                              icon: Icon(Icons.close, size:50),
+                                              icon: Icon(Icons.close, size:50, color: currentTheme.textColor,),
                                               onPressed: (){
                                                 Navigator.popUntil(context,(predicate) => predicate.isFirst);
                                               },
@@ -76,7 +78,7 @@ class _ParameterTextSizePageState extends ConsumerState<ParameterTextSizePage> {
                   Expanded(
                       flex:9,
                       child: Container(
-                        color: Colors.white,
+                        color: currentTheme.backgroundColor,
                         child: Column(
                           children: [
                             Slider(
@@ -89,13 +91,19 @@ class _ParameterTextSizePageState extends ConsumerState<ParameterTextSizePage> {
                             Center(
                               child: Text(
                                 "Text Size : ${OptionTextSize.fromNumber(slider_provider.toInt()).display}",
-                                style: ThemeCustomText.getBasicTextStyle(context,OptionTextSize.fromNumber(slider_provider.toInt())),
+                                style: TextStyle(
+                                  fontSize: ThemeCustomText.getBasicTextSize(context,OptionTextSize.fromNumber(slider_provider.toInt())),
+                                  color: currentTheme.textColor,
+                                ),
                               ),
                             ),
                             Center(
                               child: Text(
                                 "Current Size : ${parameter.getParameter("policeSize").value}",
-                                style: ThemeCustomText.getBasicTextStyle(context,OptionTextSize.fromNumber(slider_provider.toInt())),
+                                style: TextStyle(
+                                  fontSize: ThemeCustomText.getBasicTextSize(context,OptionTextSize.fromNumber(slider_provider.toInt())),
+                                  color: currentTheme.textColor,
+                                ),
                               ),
                             ),
                           ],

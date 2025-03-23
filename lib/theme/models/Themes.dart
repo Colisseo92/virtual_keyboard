@@ -2,17 +2,18 @@ import 'dart:ui';
 
 enum Themes{
   LIGHT(id:1,name: "light",
-    backgroundColor: Color.fromRGBO(236, 240, 241,1.0),
+    backgroundColor: Color.fromRGBO(255, 255, 255,1.0),
     keyColor: Color.fromRGBO(236, 240, 241,1.0),
     textColor: Color.fromRGBO(44, 62, 80,1.0),
+    shadowColor: Color.fromRGBO(255,255,255,0.7)
   ),
   DARK(id:2,name:"dark",
     backgroundColor: Color.fromRGBO(44, 62, 80,1.0),
     keyColor: Color.fromRGBO(52, 73, 94,1.0),
     textColor: Color.fromRGBO(236, 240, 241,1.0)),
   ACCESSIBILITY1(id:3,name:"contrast",
-    backgroundColor: Color.fromRGBO(241, 196, 15,1.0),
-    keyColor: Color.fromRGBO(241, 196, 15,1.0),
+    backgroundColor: Color.fromRGBO(255, 255, 255,1.0),
+    keyColor: Color.fromRGBO(255, 255, 15,1.0),
       textColor: Color.fromRGBO(0,0,0,1.0),
   ),
   NONE(id:-1,name:"none");
@@ -24,6 +25,7 @@ enum Themes{
       this.backgroundColor = const Color.fromRGBO(255, 255, 255, 1.0),
       this.textColor = const Color.fromRGBO(255, 255, 255, 1.0),
     this.keyColor = const Color.fromRGBO(255, 255, 255, 1.0),
+    this.shadowColor = const Color.fromRGBO(0, 0, 0, 0.7),
   }
       );
 
@@ -32,6 +34,7 @@ enum Themes{
   final Color backgroundColor;
   final Color textColor;
   final Color keyColor;
+  final Color shadowColor;
 
   static Themes fromId(int id){
     return Themes.values.firstWhere((e) => e.id == id, orElse: () => Themes.NONE);

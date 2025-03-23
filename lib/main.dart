@@ -19,12 +19,16 @@ import 'package:camera_android/camera_android.dart'
     if (dart.library.html) 'package:camera_web/camera_web.dart'
     if (dart.library.io) 'package:camera/camera.dart';
 import 'package:virtual_keyboard/parameters/ParameterPage.dart';
+import 'package:virtual_keyboard/parameters/models/OptionTextSize.dart';
 import 'package:virtual_keyboard/parameters/parameterWidget.dart';
+import 'package:virtual_keyboard/parameters/providers/parameter_provider.dart';
 import 'package:virtual_keyboard/parameters/services/ConfigFileManager.dart';
 import 'package:virtual_keyboard/parameters/services/ParameterManager.dart';
 import 'package:virtual_keyboard/predictor/PredictorWidget.dart';
 import 'package:virtual_keyboard/predictor/models/Prediction.dart';
 import 'package:virtual_keyboard/theme/CustomTheme.dart';
+import 'package:virtual_keyboard/theme/models/Themes.dart';
+import 'package:virtual_keyboard/theme/styles/ThemeCustomText.dart';
 import 'package:virtual_keyboard/utils/appState.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
@@ -181,10 +185,7 @@ class _CameraScreenState extends ConsumerState<CameraScreen> {
     while (_isTextStreaming) {
       try {
         String word = ref.watch(inputTextProvider).toString();
-        List<String> words = word.split(" ");
-        if(words.length > 1){
-          _text_channel.sink.add(words.last);
-        }
+        _text_channel.sink.add(word);
       } catch (e) {
         print('Error while streaming: $e');
         setState(() {
@@ -242,18 +243,27 @@ class _CameraScreenState extends ConsumerState<CameraScreen> {
   Widget build(BuildContext context) {
     return Scaffold(body: Consumer(builder: (context, ref, child) {
       String textOutput = ref.watch(inputTextProvider);
+      final param_provider = ref.watch(parameter_provider);
       print(textServerMessage);
       print(prediction.status);
       print(prediction.predictions);
-      return Container(
-        color: customTheme.getBackgroundColor(),
-        child: Column(
-          children: [
-            Expanded(
-                flex: 3,
-                child: Row(
-                  children: [
-                    /*
+      return param_provider.when(
+        error: (error, stack) => Text("Error: $error"),
+        loading: (){
+          return CircularProgressIndicator();
+        },
+        data: (parameter){
+          OptionTextSize optionTextSize = OptionTextSize.fromString(parameter.getParameter("policeSize").value);
+          Themes currentTheme = Themes.fromString(parameter.getParameter("theme").value);
+          return Container(
+            color: currentTheme.backgroundColor,
+            child: Column(
+              children: [
+                Expanded(
+                    flex: 3,
+                    child: Row(
+                      children: [
+                        /*
                     Expanded(
                       flex:1,
                       child: FutureBuilder<void>(
@@ -266,74 +276,76 @@ class _CameraScreenState extends ConsumerState<CameraScreen> {
                             }
                           }),
                     ),*/
-                    Expanded(
-                      flex:1,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(
+                        Expanded(
                             flex:1,
-                              child: ClipRect(
-                                child: Wrap(
-                                  children: [
-                                    IconButton(
-                                      icon: Icon(Icons.settings, size: 50),
-                                      onPressed: () {
-                                        //showSettingsMenu(context,widget.parameter); // Open settings menu
-                                        Navigator.push(
-                                        context,
-                                        MaterialPageRoute(builder: (context) {
-                                          return ParameterPage();
-                                        }));
-                                      },
-                                    ),
-                                    ElevatedButton(
-                                      onPressed: _isStreaming ? null : _startStreaming,
-                                      child: const Text('Start Streaming'),
-                                    ),
-                                    const SizedBox(width: 10),
-                                    ElevatedButton(
-                                      onPressed: _isStreaming ? _stopStreaming : null,
-                                      child: const Text('Stop Streaming'),
-                                    ),
-                                    ElevatedButton(
-                                      onPressed: _isTextStreaming ? null : _start_text_streaming,
-                                      child: const Text('Start Text Streaming'),
-                                    ),
-                                    const SizedBox(width: 10),
-                                    ElevatedButton(
-                                      onPressed: _isTextStreaming ? _stopTextStreaming : null,
-                                      child: const Text('Stop Text Streaming'),
-                                    ),
-                                  ],
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                    flex:1,
+                                    child: ClipRect(
+                                      child: Wrap(
+                                        children: [
+                                          IconButton(
+                                            icon: Icon(Icons.settings, size: ThemeCustomText.getBasicTextSize(context, optionTextSize)),
+                                            onPressed: () {
+                                              //showSettingsMenu(context,widget.parameter); // Open settings menu
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(builder: (context) {
+                                                    return ParameterPage();
+                                                  }));
+                                            },
+                                          ),
+                                          ElevatedButton(
+                                            onPressed: _isStreaming ? null : _startStreaming,
+                                            child: const Text('Start Streaming'),
+                                          ),
+                                          const SizedBox(width: 10),
+                                          ElevatedButton(
+                                            onPressed: _isStreaming ? _stopStreaming : null,
+                                            child: const Text('Stop Streaming'),
+                                          ),
+                                          ElevatedButton(
+                                            onPressed: _isTextStreaming ? null : _start_text_streaming,
+                                            child: const Text('Start Text Streaming'),
+                                          ),
+                                          const SizedBox(width: 10),
+                                          ElevatedButton(
+                                            onPressed: _isTextStreaming ? _stopTextStreaming : null,
+                                            child: const Text('Stop Text Streaming'),
+                                          ),
+                                        ],
+                                      ),
+                                    )
                                 ),
-                              )
-                          ),
-                          Expanded(child: Text(
-                              textOutput,
-                            style: TextStyle(
-                              fontSize: 50,
-                              color: Colors.black,
-                            ),
-                          ))
-                        ],
-                      )
+                                Expanded(child: Text(
+                                  textOutput,
+                                  style: TextStyle(
+                                    fontSize: ThemeCustomText.getBasicTextSize(context, optionTextSize),
+                                    color: Colors.black,
+                                  ),
+                                ))
+                              ],
+                            )
+                        )
+                      ],
                     )
-                  ],
-                )
-            ),
-            Expanded(
-              flex:1,
-              child: PredictorWidget(ref,prediction),
-            ),
-            Expanded(
-              flex: 5,
-              child: isLoading ?
+                ),
+                Expanded(
+                  flex:1,
+                  child: PredictorWidget(ref,prediction),
+                ),
+                Expanded(
+                  flex: 5,
+                  child: isLoading ?
                   Center(child: CircularProgressIndicator())
-                  : KeyboardWidget(ref,keyboardManager: keyboardManager, buffer: keyBuffer,),
-            )
-          ],
-        ),
+                      : KeyboardWidget(ref,keyboardManager: keyboardManager, buffer: keyBuffer,),
+                )
+              ],
+            ),
+          );
+        }
       );
     }));
   }

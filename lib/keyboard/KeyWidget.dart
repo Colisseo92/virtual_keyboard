@@ -49,13 +49,13 @@ class KeyWidgetButton extends ConsumerWidget {
               borderRadius: BorderRadius.circular(10),
               boxShadow: [
                 BoxShadow(
-                  color: Color.fromRGBO(255, 255, 255, 0.7),
-                  offset: Offset(-5, -5),
+                  color: currentTheme.shadowColor,
+                  offset: Offset(-1, -1),
                   blurRadius: 10,
                 ),
                 BoxShadow(
                   color: Color.fromRGBO(0, 0, 0, 0.2),
-                  offset: Offset(-5,-5),
+                  offset: Offset(-1,-1),
                   blurRadius: 10,
                 )
               ],

@@ -7,6 +7,7 @@ import 'package:virtual_keyboard/parameters/pages/ParameterTextSizePage.dart';
 import 'package:virtual_keyboard/parameters/pages/ParameterThemePage.dart';
 import 'package:virtual_keyboard/parameters/providers/parameter_provider.dart';
 import 'package:virtual_keyboard/parameters/services/ParameterManager.dart';
+import 'package:virtual_keyboard/theme/models/Themes.dart';
 import 'package:virtual_keyboard/theme/styles/ThemeCustomText.dart';
 
 class ParameterPage extends ConsumerStatefulWidget {
@@ -31,8 +32,9 @@ class _ParameterPageState extends ConsumerState<ParameterPage> {
         },
         data: (parameter){
           OptionTextSize optionTextSize = OptionTextSize.fromString(parameter.getParameter("policeSize").value);
+          Themes currentTheme = Themes.fromString(parameter.getParameter("theme").value);
           return Container(
-            color: Colors.white,
+            color: currentTheme.backgroundColor,
             child: Column(
               children: [
                 Expanded(
@@ -50,7 +52,10 @@ class _ParameterPageState extends ConsumerState<ParameterPage> {
                                 child: Wrap(
                                   children: [
                                     IconButton(
-                                      icon: Icon(Icons.arrow_back_ios_new, size:50),
+                                      icon: Icon(
+                                        Icons.arrow_back_ios_new,
+                                        size:ThemeCustomText.getBasicTextSize(context, optionTextSize),
+                                        color: currentTheme.textColor,),
                                       onPressed: (){
                                         Navigator.pop(context);
                                       },
@@ -72,12 +77,19 @@ class _ParameterPageState extends ConsumerState<ParameterPage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Container(
-                          color: Colors.white,
+                          color: currentTheme.keyColor,
                           child: ListTile(
-                            leading: Icon(Icons.format_size, size: ThemeCustomText.getBasicTextSize(context, optionTextSize)),
+                            leading: Icon(
+                                Icons.format_size,
+                                size: ThemeCustomText.getBasicTextSize(context, optionTextSize),
+                                color: currentTheme.textColor,
+                            ),
                             title: Text(
                               AppLocalizations.of(context)!.first_setting,
-                              style: ThemeCustomText.getBasicTextStyle(context, optionTextSize),
+                              style: TextStyle(
+                                color: currentTheme.textColor,
+                                fontSize: ThemeCustomText.getBasicTextSize(context, optionTextSize)
+                              ),
                             ),
                             onTap: () async {
                               final result = await Navigator.push(
@@ -90,17 +102,27 @@ class _ParameterPageState extends ConsumerState<ParameterPage> {
                           ),
                         ),
                         Container(
-                          color: Colors.white,
+                          color: currentTheme.keyColor,
                           child: ListTile(
-                            leading: Icon(Icons.palette,size: ThemeCustomText.getBasicTextSize(context, optionTextSize),),
+                            leading: Icon(
+                              Icons.palette,
+                              size: ThemeCustomText.getBasicTextSize(context, optionTextSize),
+                              color: currentTheme.textColor,
+                          ),
                             title: Text(
                                 AppLocalizations.of(context)!.second_setting,
-                              style: ThemeCustomText.getBasicTextStyle(context, optionTextSize),
+                              style: TextStyle(
+                                color: currentTheme.textColor,
+                                fontSize: ThemeCustomText.getBasicTextSize(context, optionTextSize),
+                              ),
                             ),
-                            onTap: (){
-                              Navigator.push(
+                            onTap: () async {
+                              final result = await Navigator.push(
                                   context,
-                                  MaterialPageRoute(builder: (context) => const ParameterThemePage()));
+                                  MaterialPageRoute(builder: (context) => ParameterThemePage()));
+                              if(result == 'refresh'){
+                                setState((){});
+                              }
                             },
                           ),
                         ),

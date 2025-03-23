@@ -33,8 +33,9 @@ class _ParameterThemePageState extends ConsumerState<ParameterThemePage> {
                 ref.read(themeCheckboxSelectionProvider.notifier).state = Themes.fromString(parameter.getParameter("theme").value).id;
               });
             }
+            Themes currentTheme = Themes.fromString(parameter.getParameter("theme").value);
             return Container(
-              color: Colors.white,
+              color: currentTheme.backgroundColor,
               child: Column(
                 children: [
                   Expanded(
@@ -56,7 +57,7 @@ class _ParameterThemePageState extends ConsumerState<ParameterThemePage> {
                                               onPressed: (){
                                                 parameter.setParameter("theme",Themes.fromId(ref.watch(themeCheckboxSelectionProvider)).name);
                                                 ConfigFileManager.updateConfig(parameter.toConfigFormat());
-                                                Navigator.pop(context);
+                                                Navigator.pop(context,'refresh');
                                                 print(parameter.toString());
                                               },
                                             ),

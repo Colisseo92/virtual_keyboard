@@ -64,3 +64,4 @@ flutter:
     - assets/keyboard/languages/french.json
     - assets/keyboard/languages/french_phone.json
     - assets/keyboard/languages/english_phone.json
+    - assets/keyboard/languages/grec_phone.json
